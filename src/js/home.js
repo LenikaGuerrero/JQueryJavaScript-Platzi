@@ -53,4 +53,17 @@ $.ajax('https://randomuser.me/api/asdas', {
 fetch('https://randomuser.me/api/awdaw') // fetch devuelve una promesa
     .then((response) => response.json()) //return
     .then((user) => console.log('user', user.results[0].name.first))
-    .catch(() => console.log('Algo Fallo'))
+    .catch(() => console.log('Algo Fallo'));
+
+
+(async function load() {
+    async function getData(url) {
+        const response = await fetch(url)
+        const data = await response.json()
+        return data
+    }
+    const actionList = await getData('https://yts.mx/api/v2/list_movies.json?genre=action')
+    const adventureList = await getData('https://yts.mx/api/v2/list_movies.json?genre=adventure')
+    const animationList = await getData('https://yts.mx/api/v2/list_movies.json?genre=animation')
+    console.log(actionList, adventureList, animationList)
+})() //Ejecuta la funcion automaticamente
