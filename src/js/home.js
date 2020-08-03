@@ -36,3 +36,21 @@ Promise.race([
     ])
     .then((message) => console.log(message))
     .catch((message) => console.log(message))
+
+//---------------------------------------------------- AJAX - JQuery
+$.ajax('https://randomuser.me/api/asdas', {
+    //Traer Datos: GET - Mandar Datos: POST
+    method: 'GET',
+    //Success se ejecuta cuando todo sale bien
+    //data: lo que devuelve del api 
+    success: (data) => console.log(data),
+    //Error se ejecuta cuando hay un errors
+    //error: mensaje de error del api 
+    error: (error) => console.log(error),
+})
+
+//--------------------------------------------------- JavaScript
+fetch('https://randomuser.me/api/awdaw') // fetch devuelve una promesa
+    .then((response) => response.json()) //return
+    .then((user) => console.log('user', user.results[0].name.first))
+    .catch(() => console.log('Algo Fallo'))
