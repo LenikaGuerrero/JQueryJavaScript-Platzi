@@ -1,8 +1,19 @@
-console.log('hola mundo!');
-const noCambia = "Leonidas";
+const $actionContainer = document.querySelector('#action')
+const $adventureContainer = document.getElementById('#adventure')
+const $animationContainer = document.getElementById('#animation')
 
-let cambia = "@LeonidasEsteban"
+const $home = document.getElementById('#home')
 
-function cambiarNombre(nuevoNombre) {
-  cambia = nuevoNombre
-}
+//-------------------------------------------------------- Formulario
+const $featuringContainer = document.getElementById('#featuring')
+const $form = document.getElementById('#form')
+
+//-------------------------------------------------------- Modal
+const $modal = document.getElementById('modal')
+const $overlay = document.getElementById('overlay')
+const $hideModal = document.getElementById('hide-modal')
+
+//Busqueda en el espacio previamente mencionado (Modal)
+const $modalTitle = $modal.querySelector('h1')
+const $modalImage = $modal.querySelector('img')
+const $modalDescription = $modal.querySelector('p')
