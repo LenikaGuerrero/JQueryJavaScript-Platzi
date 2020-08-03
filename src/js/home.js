@@ -66,4 +66,21 @@ fetch('https://randomuser.me/api/awdaw') // fetch devuelve una promesa
     const adventureList = await getData('https://yts.mx/api/v2/list_movies.json?genre=adventure')
     const animationList = await getData('https://yts.mx/api/v2/list_movies.json?genre=animation')
     console.log(actionList, adventureList, animationList)
+
+    //----------------------------------JQuery
+    //const $home = $('.home') //Elemento del DOM con la CLASE home
+    //const $home = $('#home') //Elemento del DOM con el ID home
+    //----------------------------------JavaScript
+
+    // Retorna un elemento con el ID modal
+    const $home1 = document.getElementById('modal')
+        //Retorna una lista de elementos con la CLASE modal
+    const $home2 = document.getElementsByClassName('modal')
+        // Retorna una lista de elementos con el TAG div
+    const $home3 = document.getElementsByTagName('div')
+        // Devuelve el primer elemento que coincida con el Query de busqueda
+    const $home4 = document.querySelector('.myPlaylist-item')
+        // Devuelve todos los elementos que coincidan con el Query de busqueda
+    const $home4 = document.querySelectorAll('.myPlaylist-item')
+
 })() //Ejecuta la funcion automaticamente
