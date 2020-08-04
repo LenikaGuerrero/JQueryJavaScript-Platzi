@@ -5,14 +5,18 @@
         return data
     }
     const $form = document.getElementById('form')
+    const $home = document.getElementById('home')
+
     $form.addEventListener('submit', (event) => {
-        debugger
+
         event.preventDefault()
+        $home.classList.add('search-active')
     })
 
     const actionList = await getData('https://yts.mx/api/v2/list_movies.json?genre=action')
     const adventureList = await getData('https://yts.mx/api/v2/list_movies.json?genre=adventure')
     const animationList = await getData('https://yts.mx/api/v2/list_movies.json?genre=animation')
+    console.log(actionList)
 
     function videoItemTemplate(movie) {
         return (
@@ -32,8 +36,9 @@
         return html.body.children[0] //Primer elemento del HTML
     }
 
+
     function addEventClick($element) {
-        $element.addEventListener('click', () => alert('click'))
+        $element.addEventListener('click', () => showModal())
     }
 
     function renderMovieList(list, $container) {
@@ -56,8 +61,6 @@
     renderMovieList(animationList.data.movies, $animationContainer)
 
 
-    const $home = document.getElementById('#home')
-
     //-------------------------------------------------------- Formulario
     const $featuringContainer = document.getElementById('#featuring')
 
@@ -71,8 +74,16 @@
     const $modalImage = $modal.querySelector('img')
     const $modalDescription = $modal.querySelector('p')
 
+    function showModal() {
+        $overlay.classList.add('active')
+        $modal.style.animation = 'modalIn .8s forwards'
+    }
 
+    $hideModal.addEventListener('click', hideModal)
 
-    //console.log(videoItemTemplate('src/images/covers/bitcoin.jpg', 'bitcoin'))
+    function hideModal() {
+        $overlay.classList.remove('active')
+        $modal.style.animation = 'modalOut .8s forwards'
+    }
 
 })()
