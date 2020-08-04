@@ -5,12 +5,27 @@
         return data
     }
     const $form = document.getElementById('form')
+    const $featuringContainer = document.getElementById('featuring')
+
     const $home = document.getElementById('home')
+
+    function setAttributes($element, attributes) {
+        for (const attribute in attributes) {
+            $element.setAttribute(attribute, attributes[attribute])
+        }
+    }
 
     $form.addEventListener('submit', (event) => {
 
         event.preventDefault()
         $home.classList.add('search-active')
+        const $loader = document.createElement('img')
+        setAttributes($loader, {
+            src: 'src/images/loader.gif',
+            heigth: 50,
+            width: 50,
+        })
+        $featuringContainer.append($loader)
     })
 
     const actionList = await getData('https://yts.mx/api/v2/list_movies.json?genre=action')
@@ -59,10 +74,6 @@
     renderMovieList(actionList.data.movies, $actionContainer)
     renderMovieList(adventureList.data.movies, $adventureContainer)
     renderMovieList(animationList.data.movies, $animationContainer)
-
-
-    //-------------------------------------------------------- Formulario
-    const $featuringContainer = document.getElementById('#featuring')
 
     //-------------------------------------------------------- Modal
     const $modal = document.getElementById('modal')
