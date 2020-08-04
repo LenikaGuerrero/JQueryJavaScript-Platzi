@@ -19,18 +19,30 @@
         )
     }
 
-    const $actionContainer = document.querySelector('#action')
-    const $adventureContainer = document.getElementById('#adventure')
-    const $animationContainer = document.getElementById('#animation')
-
-    actionList.data.movies.forEach((movie) => {
-        const HTMLString = videoItemTemplate(movie); // Texto de HTML
+    function createTemplate(HTMLString) {
         const html = document.implementation.createHTMLDocument() //Documento de HTML
         html.body.innerHTML = HTMLString
-            //debugger
-        $actionContainer.append(html.body.children[0]) //Primer elemento del HTML
-            //console.log(HTMLString)
-    })
+
+        return html.body.children[0] //Primer elemento del HTML
+    }
+
+    function renderMovieList(list, $container) {
+        $container.children[0].remove()
+            //actionList.data.movies
+        list.forEach((movie) => {
+            const HTMLString = videoItemTemplate(movie); // Texto de HTML
+            const movieElement = createTemplate(HTMLString)
+            $container.append(movieElement)
+        })
+    }
+
+    const $actionContainer = document.querySelector('#action')
+    const $adventureContainer = document.getElementById('adventure')
+    const $animationContainer = document.getElementById('animation')
+
+    renderMovieList(actionList.data.movies, $actionContainer)
+    renderMovieList(adventureList.data.movies, $adventureContainer)
+    renderMovieList(animationList.data.movies, $animationContainer)
 
 
     const $home = document.getElementById('#home')
