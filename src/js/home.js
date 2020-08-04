@@ -10,25 +10,28 @@
 
     function videoItemTemplate(movie) {
         return (
-            `< div class="primaryPlaylistItem" >
+            `<div class="primaryPlaylistItem">
                 <div class="primaryPlaylistItem-image">
                     <img src="${movie.medium_cover_image}">
                 </div>
-                <h4 class="primaryPlaylistItem-title">
-                    ${movie.title}
-                </h4>
+                <h4 class="primaryPlaylistItem-title">${movie.title}</h4>
             </div>`
         )
     }
 
-    actionList.data.movies.forEach((movie) => {
-        const HTMLString = videoItemTemplate(movie);
-        console.log(HTMLString)
-    });
-
     const $actionContainer = document.querySelector('#action')
     const $adventureContainer = document.getElementById('#adventure')
     const $animationContainer = document.getElementById('#animation')
+
+    actionList.data.movies.forEach((movie) => {
+        const HTMLString = videoItemTemplate(movie); // Texto de HTML
+        const html = document.implementation.createHTMLDocument() //Documento de HTML
+        html.body.innerHTML = HTMLString
+            //debugger
+        $actionContainer.append(html.body.children[0]) //Primer elemento del HTML
+            //console.log(HTMLString)
+    })
+
 
     const $home = document.getElementById('#home')
 
