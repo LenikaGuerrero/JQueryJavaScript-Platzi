@@ -4,6 +4,12 @@
         const data = await response.json()
         return data
     }
+    const $form = document.getElementById('form')
+    $form.addEventListener('submit', (event) => {
+        debugger
+        event.preventDefault()
+    })
+
     const actionList = await getData('https://yts.mx/api/v2/list_movies.json?genre=action')
     const adventureList = await getData('https://yts.mx/api/v2/list_movies.json?genre=adventure')
     const animationList = await getData('https://yts.mx/api/v2/list_movies.json?genre=animation')
@@ -26,6 +32,10 @@
         return html.body.children[0] //Primer elemento del HTML
     }
 
+    function addEventClick($element) {
+        $element.addEventListener('click', () => alert('click'))
+    }
+
     function renderMovieList(list, $container) {
         $container.children[0].remove()
             //actionList.data.movies
@@ -33,6 +43,7 @@
             const HTMLString = videoItemTemplate(movie); // Texto de HTML
             const movieElement = createTemplate(HTMLString)
             $container.append(movieElement)
+            addEventClick(movieElement)
         })
     }
 
@@ -49,7 +60,6 @@
 
     //-------------------------------------------------------- Formulario
     const $featuringContainer = document.getElementById('#featuring')
-    const $form = document.getElementById('#form')
 
     //-------------------------------------------------------- Modal
     const $modal = document.getElementById('modal')
