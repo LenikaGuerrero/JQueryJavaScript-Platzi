@@ -70,17 +70,44 @@ fetch('https://randomuser.me/api/awdaw') // fetch devuelve una promesa
     //----------------------------------JQuery
     //const $home = $('.home') //Elemento del DOM con la CLASE home
     //const $home = $('#home') //Elemento del DOM con el ID home
+
+    //----------------------------------JavaScript
+    // Retorna un elemento con el ID modal
+    const $home1 = document.getElementById('modal');
+    //Retorna una lista de elementos con la CLASE modal
+    const $home2 = document.getElementsByClassName('modal');
+    // Retorna una lista de elementos con el TAG div
+    const $home3 = document.getElementsByTagName('div');
+    // Devuelve el primer elemento que coincida con el Query de busqueda
+    const $home4 = document.querySelector('myPlaylist-item');
+    // Devuelve todos los elementos que coincidan con el Query de busqueda
+    //const $home4 = document.querySelectorAll('myPlaylist-item');
+
+
+    //----------------------------------JQuery
+    // '< div class="primaryPlaylistItem" >'+
+    //     '<div class="primaryPlaylistItem-image">'+
+    //         '<img src='+imageSRC+'>'+
+    //     '</div>'+
+    //     '<h4 class="primaryPlaylistItem-title">'+
+    //         'Titulo de la peli'+
+    //     '</h4>'+
+    // '</div>'
+
     //----------------------------------JavaScript
 
-    // Retorna un elemento con el ID modal
-    const $home1 = document.getElementById('modal')
-        //Retorna una lista de elementos con la CLASE modal
-    const $home2 = document.getElementsByClassName('modal')
-        // Retorna una lista de elementos con el TAG div
-    const $home3 = document.getElementsByTagName('div')
-        // Devuelve el primer elemento que coincida con el Query de busqueda
-    const $home4 = document.querySelector('.myPlaylist-item')
-        // Devuelve todos los elementos que coincidan con el Query de busqueda
-    const $home4 = document.querySelectorAll('.myPlaylist-item')
+    function videoItemTemplate(src, titulo) {
+        return (
+            `< div class="primaryPlaylistItem" >
+                <div class="primaryPlaylistItem-image">
+                    <img src="${src}">
+                </div>
+                <h4 class="primaryPlaylistItem-title">
+                    ${titulo}
+                </h4>
+            </div>`
+        )
+    }
+    console.log(videoItemTemplate('src/images/covers/bitcoin.jpg', 'bitcoinjpg'))
 
 })() //Ejecuta la funcion automaticamente
