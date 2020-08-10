@@ -46,8 +46,14 @@
         /*FormData va a abstraer todos los valores de los elementos del formulario que cuenten 
         con un atributo 'name' asignado y los junta en un objeto de tipo FormData*/
         const data = new FormData($form);
-        const pelicula = await getData(`${BASE_API}limit=1&query_term=${data.get('name')}`) //retorna el valor del elemento con el atributo name="nombre"
-        const HTMLString = featuringTemplate(pelicula.data.movies[0])
+
+        //pelicula.data.movies[0]
+        const {
+            data: {
+                movies: pelicula
+            }
+        } = await getData(`${BASE_API}limit=1&query_term=${data.get('name')}`) //retorna el valor del elemento con el atributo name="nombre"
+        const HTMLString = featuringTemplate(pelicula[0])
         $featuringContainer.innerHTML = HTMLString
     })
 
@@ -56,9 +62,9 @@
     const animationList = await getData(`${BASE_API}genre=animation`)
     console.log(actionList)
 
-    function videoItemTemplate(movie) {
+    function videoItemTemplate(movie, category) {
         return (
-            `<div class="primaryPlaylistItem">
+            `<div class="primaryPlaylistItem" data-id="${movie.id}" data-category=${category}>
                 <div class="primaryPlaylistItem-image">
                     <img src="${movie.medium_cover_image}">
                 </div>
@@ -76,14 +82,16 @@
 
 
     function addEventClick($element) {
-        $element.addEventListener('click', () => showModal())
+        $element.addEventListener('click', () => {
+            showModal($element)
+        })
     }
 
-    function renderMovieList(list, $container) {
+    function renderMovieList(list, $container, category) {
         $container.children[0].remove()
             //actionList.data.movies
         list.forEach((movie) => {
-            const HTMLString = videoItemTemplate(movie); // Texto de HTML
+            const HTMLString = videoItemTemplate(movie, category); // Texto de HTML
             const movieElement = createTemplate(HTMLString)
             $container.append(movieElement)
             addEventClick(movieElement)
@@ -94,9 +102,9 @@
     const $adventureContainer = document.getElementById('adventure')
     const $animationContainer = document.getElementById('animation')
 
-    renderMovieList(actionList.data.movies, $actionContainer)
-    renderMovieList(adventureList.data.movies, $adventureContainer)
-    renderMovieList(animationList.data.movies, $animationContainer)
+    renderMovieList(actionList.data.movies, $actionContainer, 'action')
+    renderMovieList(adventureList.data.movies, $adventureContainer, 'adventure')
+    renderMovieList(animationList.data.movies, $animationContainer, 'animation')
 
     //-------------------------------------------------------- Modal
     const $modal = document.getElementById('modal')
@@ -108,9 +116,13 @@
     const $modalImage = $modal.querySelector('img')
     const $modalDescription = $modal.querySelector('p')
 
-    function showModal() {
+    function showModal($element) {
         $overlay.classList.add('active')
         $modal.style.animation = 'modalIn .8s forwards'
+            //guarda el valor de data-id
+        const id = $element.dataset.id
+            //guarda el valor de data-category
+        const category = $element.dataset.category
     }
 
     $hideModal.addEventListener('click', hideModal)
