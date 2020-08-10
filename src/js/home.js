@@ -15,7 +15,23 @@
         }
     }
 
-    $form.addEventListener('submit', (event) => {
+    const BASE_API = 'https://yts.mx/api/v2/list_movies.json?'
+
+    function featuringTemplate(pelicula) {
+        return (
+            `<div class="featuring">
+                <div class="featuring-image">
+                    <img src="${pelicula.medium_cover_image}" width="70" height="100" alt="">
+                </div>
+                <div class="featuring-content">
+                    <p class="featuring-title">Pelicula encontrada</p>
+                    <p class="featuring-album">${pelicula.title}</p>
+                </div>
+            </div>`
+        )
+    }
+
+    $form.addEventListener('submit', async(event) => {
 
         event.preventDefault()
         $home.classList.add('search-active')
@@ -26,11 +42,18 @@
             width: 50,
         })
         $featuringContainer.append($loader)
+
+        /*FormData va a abstraer todos los valores de los elementos del formulario que cuenten 
+        con un atributo 'name' asignado y los junta en un objeto de tipo FormData*/
+        const data = new FormData($form);
+        const pelicula = await getData(`${BASE_API}limit=1&query_term=${data.get('name')}`) //retorna el valor del elemento con el atributo name="nombre"
+        const HTMLString = featuringTemplate(pelicula.data.movies[0])
+        $featuringContainer.innerHTML = HTMLString
     })
 
-    const actionList = await getData('https://yts.mx/api/v2/list_movies.json?genre=action')
-    const adventureList = await getData('https://yts.mx/api/v2/list_movies.json?genre=adventure')
-    const animationList = await getData('https://yts.mx/api/v2/list_movies.json?genre=animation')
+    const actionList = await getData(`${BASE_API}genre=action`)
+    const adventureList = await getData(`${BASE_API}genre=adventure`)
+    const animationList = await getData(`${BASE_API}genre=animation`)
     console.log(actionList)
 
     function videoItemTemplate(movie) {
@@ -96,5 +119,4 @@
         $overlay.classList.remove('active')
         $modal.style.animation = 'modalOut .8s forwards'
     }
-
 })()
