@@ -2,7 +2,12 @@
     async function getData(url) {
         const response = await fetch(url)
         const data = await response.json()
-        return data
+        if (data.data.movie_count > 0) {
+            //aqui se acaba
+            return data
+        }
+        //si no hay peliculas aqui continua 
+        throw new Error('No se encontro ningun resultado')
     }
     const $form = document.getElementById('form')
     const $featuringContainer = document.getElementById('featuring')
@@ -46,15 +51,21 @@
         /*FormData va a abstraer todos los valores de los elementos del formulario que cuenten 
         con un atributo 'name' asignado y los junta en un objeto de tipo FormData*/
         const data = new FormData($form);
+        try {
+            //pelicula.data.movies[0]
+            const {
+                data: {
+                    movies: pelicula
+                }
+            } = await getData(`${BASE_API}limit=1&query_term=${data.get('name')}`) //retorna el valor del elemento con el atributo name="nombre"
+            const HTMLString = featuringTemplate(pelicula[0])
+            $featuringContainer.innerHTML = HTMLString
+        } catch (error) {
+            alert(error.message)
+            $loader.remove()
+            $home.classList.remove('search-active')
+        }
 
-        //pelicula.data.movies[0]
-        const {
-            data: {
-                movies: pelicula
-            }
-        } = await getData(`${BASE_API}limit=1&query_term=${data.get('name')}`) //retorna el valor del elemento con el atributo name="nombre"
-        const HTMLString = featuringTemplate(pelicula[0])
-        $featuringContainer.innerHTML = HTMLString
     })
 
 
