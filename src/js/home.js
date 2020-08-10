@@ -57,9 +57,9 @@
         $featuringContainer.innerHTML = HTMLString
     })
 
-    const actionList = await getData(`${BASE_API}genre=action`)
-    const adventureList = await getData(`${BASE_API}genre=adventure`)
-    const animationList = await getData(`${BASE_API}genre=animation`)
+    const { data: { movies: actionList } } = await getData(`${BASE_API}genre=action`)
+    const { data: { movies: adventureList } } = await getData(`${BASE_API}genre=adventure`)
+    const { data: { movies: animationList } } = await getData(`${BASE_API}genre=animation`)
     console.log(actionList)
 
     function videoItemTemplate(movie, category) {
@@ -102,9 +102,9 @@
     const $adventureContainer = document.getElementById('adventure')
     const $animationContainer = document.getElementById('animation')
 
-    renderMovieList(actionList.data.movies, $actionContainer, 'action')
-    renderMovieList(adventureList.data.movies, $adventureContainer, 'adventure')
-    renderMovieList(animationList.data.movies, $animationContainer, 'animation')
+    renderMovieList(actionList, $actionContainer, 'action')
+    renderMovieList(adventureList, $adventureContainer, 'adventure')
+    renderMovieList(animationList, $animationContainer, 'animation')
 
     //-------------------------------------------------------- Modal
     const $modal = document.getElementById('modal')
@@ -116,13 +116,38 @@
     const $modalImage = $modal.querySelector('img')
     const $modalDescription = $modal.querySelector('p')
 
+    function findById(list, id) {
+        return list.find(movie => movie.id === parseInt(id, 10))
+    }
+
+    function findMovie(id, category) {
+        switch (category) {
+            case 'action':
+                return findById(actionList, id)
+                break;
+            case 'adventure':
+                return findById(adventureList, id)
+                break;
+            case 'animation':
+                return findById(animationList, id)
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
     function showModal($element) {
         $overlay.classList.add('active')
         $modal.style.animation = 'modalIn .8s forwards'
-            //guarda el valor de data-id
-        const id = $element.dataset.id
-            //guarda el valor de data-category
-        const category = $element.dataset.category
+        const id = $element.dataset.id //guarda el valor de data-id
+        const category = $element.dataset.category //guarda el valor de data-category
+        const data = findMovie(id, category)
+
+        $modalTitle.textContent = data.title
+        $modalImage.setAttribute('src', data.medium_cover_image)
+        $modalDescription.textContent = data.description_full
     }
 
     $hideModal.addEventListener('click', hideModal)
