@@ -57,10 +57,6 @@
         $featuringContainer.innerHTML = HTMLString
     })
 
-    const { data: { movies: actionList } } = await getData(`${BASE_API}genre=action`)
-    const { data: { movies: adventureList } } = await getData(`${BASE_API}genre=adventure`)
-    const { data: { movies: animationList } } = await getData(`${BASE_API}genre=animation`)
-    console.log(actionList)
 
     function videoItemTemplate(movie, category) {
         return (
@@ -80,7 +76,6 @@
         return html.body.children[0] //Primer elemento del HTML
     }
 
-
     function addEventClick($element) {
         $element.addEventListener('click', () => {
             showModal($element)
@@ -94,16 +89,28 @@
             const HTMLString = videoItemTemplate(movie, category); // Texto de HTML
             const movieElement = createTemplate(HTMLString)
             $container.append(movieElement)
+            const image = movieElement.querySelector('img') //Aplicar la clase solo a las imagenes
+            image.addEventListener('load', (event) => {
+                event.srcElement.classList.add('fadeIn')
+            })
+
             addEventClick(movieElement)
         })
     }
 
+    //Action
+    const { data: { movies: actionList } } = await getData(`${BASE_API}genre=action`)
     const $actionContainer = document.querySelector('#action')
-    const $adventureContainer = document.getElementById('adventure')
-    const $animationContainer = document.getElementById('animation')
-
     renderMovieList(actionList, $actionContainer, 'action')
+
+    //Adventure
+    const { data: { movies: adventureList } } = await getData(`${BASE_API}genre=adventure`)
+    const $adventureContainer = document.getElementById('adventure')
     renderMovieList(adventureList, $adventureContainer, 'adventure')
+
+    //Animation
+    const { data: { movies: animationList } } = await getData(`${BASE_API}genre=animation`)
+    const $animationContainer = document.getElementById('animation')
     renderMovieList(animationList, $animationContainer, 'animation')
 
     //-------------------------------------------------------- Modal
