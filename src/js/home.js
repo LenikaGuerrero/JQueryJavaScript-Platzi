@@ -192,16 +192,19 @@
 
     //Action
     const { data: { movies: actionList } } = await getData(`${BASE_API}genre=action`)
+    window.localStorage.setItem('actionList', JSON.stringify(actionList)) //Guarda datos
     const $actionContainer = document.querySelector('#action')
     renderMovieList(actionList, $actionContainer, 'action')
 
     //Adventure
     const { data: { movies: adventureList } } = await getData(`${BASE_API}genre=adventure`)
+    window.localStorage.setItem('adventureList', JSON.stringify(adventureList))
     const $adventureContainer = document.getElementById('adventure')
     renderMovieList(adventureList, $adventureContainer, 'adventure')
 
     //Animation
     const { data: { movies: animationList } } = await getData(`${BASE_API}genre=animation`)
+    window.localStorage.setItem('animationList', JSON.stringify(animationList))
     const $animationContainer = document.getElementById('animation')
     renderMovieList(animationList, $animationContainer, 'animation')
 
