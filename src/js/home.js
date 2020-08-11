@@ -189,22 +189,31 @@
             addEventClick(movieElement)
         })
     }
+    //Guardar Datos en Cache
+    async function cacheExist(category) {
+        const listName = `${category}List`
+        const cacheList = window.localStorage.getItem('listName')
+        if (cacheList) {
+            return JSON.parse(cacheList) //se convierte a objeto
+        }
+        const { data: { movies: data } } = await getData(`${BASE_API}genre=${category}`)
+        window.localStorage.setItem(listName, JSON.stringify(data)) // Guarda datos
+        return data
+    }
 
     //Action
-    const { data: { movies: actionList } } = await getData(`${BASE_API}genre=action`)
-    window.localStorage.setItem('actionList', JSON.stringify(actionList)) //Guarda datos
+    // const { data: { movies: actionList } } = await getData(`${BASE_API}genre=action`)
+    const actionList = await cacheExist('action')
     const $actionContainer = document.querySelector('#action')
     renderMovieList(actionList, $actionContainer, 'action')
 
     //Adventure
-    const { data: { movies: adventureList } } = await getData(`${BASE_API}genre=adventure`)
-    window.localStorage.setItem('adventureList', JSON.stringify(adventureList))
+    const adventureList = await cacheExist('adventure')
     const $adventureContainer = document.getElementById('adventure')
     renderMovieList(adventureList, $adventureContainer, 'adventure')
 
     //Animation
-    const { data: { movies: animationList } } = await getData(`${BASE_API}genre=animation`)
-    window.localStorage.setItem('animationList', JSON.stringify(animationList))
+    const animationList = await cacheExist('animation')
     const $animationContainer = document.getElementById('animation')
     renderMovieList(animationList, $animationContainer, 'animation')
 
