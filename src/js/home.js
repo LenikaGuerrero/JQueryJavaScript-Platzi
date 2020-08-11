@@ -1,4 +1,83 @@
 (async function load() {
+    //------------------------------------------------------------Usuarios
+    async function getUsersData(url) {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.info.results > 0) {
+            return data;
+        }
+        throw new Error('No Hay Amigos Conectados')
+    }
+
+    const USERS_API = 'https://randomuser.me/api/?results=10';
+    const { results: usersList } = await getUsersData(USERS_API);
+    const $listFriendsContainer = document.querySelector('#listFriends');
+
+    function capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    function friendTemplate(user) {
+        const { name, picture } = user
+        return (
+            `<li class="playlistFriends-item" data-firstname="${name.first}">
+      <a href="#">
+        <img src="${picture.thumbnail}" alt="${name.first} ${name.last} avatar" />
+        <span>
+          ${capitalize(name.first)} ${capitalize(name.last)}
+        </span>
+      </a>
+    </li>`
+        )
+    }
+
+    function findByName(name, list) {
+        return list.find(element => element.name.first === name)
+    }
+
+    function showFriendModal($element) {
+        $overlay.classList.add('active');
+        $modal.style.animation = 'modalIn .8s forwards';
+        const { firstname } = $element.dataset;
+        const {
+            name,
+            picture,
+            email,
+            dob,
+            location,
+            phone
+        } = findByName(firstname, usersList);
+        $modalTitle.textContent = `${capitalize(name.first)} ${capitalize(name.last)}`;
+        $modalImage.setAttribute('src', picture.large);
+        $modalDescription.innerHTML = `
+      <strong>Email:</strong> ${email}<br>
+      <strong>Phone:</strong> ${phone}<br>
+      <strong>Age:</strong> ${dob.age}<br>
+      <strong>Location:</strong> ${capitalize(location.city)}. ${capitalize(location.state)}
+    `;
+    }
+
+    function userClick($container) {
+        const listFriends = Array.from($container.children);
+        listFriends.forEach(($element) => {
+            $element.addEventListener('click', function() {
+                showFriendModal($element);
+            })
+        })
+    }
+
+    function renderlistFriends($container, list) {
+        $container.children[0].remove();
+        list.forEach((user) => {
+            const HTMLString = friendTemplate(user);
+            $container.innerHTML += HTMLString;
+        })
+        userClick($container)
+    }
+
+    renderlistFriends($listFriendsContainer, usersList);
+
+    //-----------------------------------------------------------Peliculas
     async function getData(url) {
         const response = await fetch(url)
         const data = await response.json()
@@ -9,6 +88,10 @@
         //si no hay peliculas aqui continua 
         throw new Error('No se encontro ningun resultado')
     }
+
+    //------------------------------------------------------------ Catalogo
+    const BASE_API = 'https://yts.mx/api/v2/list_movies.json?'
+
     const $form = document.getElementById('form')
     const $featuringContainer = document.getElementById('featuring')
 
@@ -19,8 +102,6 @@
             $element.setAttribute(attribute, attributes[attribute])
         }
     }
-
-    const BASE_API = 'https://yts.mx/api/v2/list_movies.json?'
 
     function featuringTemplate(pelicula) {
         return (
@@ -174,4 +255,29 @@
         $overlay.classList.remove('active')
         $modal.style.animation = 'modalOut .8s forwards'
     }
+
+    //------------------------------------------------------------ Top Ten
+
+
+    const $myPlaylistContainer = document.querySelector('#myPlaylist');
+
+    function itemTemplate(movie, category) {
+        return (
+            `<li class="myPlaylist-item" data-id="${movie.id}" data-category="${category}">
+                <span>${movie.title}</span>
+            </li>`
+        )
+    }
+
+    function renderFavoriteList(list, $container, category) {
+        $container.children[0].remove();
+        list.forEach(movie => {
+            const HTMLString = itemTemplate(movie, category);
+            $container.innerHTML += HTMLString;
+        })
+
+    }
+
+    const { data: { movies: scifiList } } = await getData(`${BASE_API}list_movies.json?genre=sci-fi&limit=10`)
+    renderFavoriteList(scifiList, $myPlaylistContainer, 'scifi');
 })()
